@@ -1,0 +1,2 @@
+pnpm lint --write
+pnpm build
