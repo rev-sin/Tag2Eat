@@ -5,12 +5,13 @@ export type CartItem = {
   quantity: number;
 };
 
-export type CartStore = {
+export interface CartStore {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
+  addItem: (item: CartItem) => void;
   removeItem: (id: number) => void;
   clearCart: () => void;
   increaseQty: (id: number) => void;
   decreaseQty: (id: number) => void;
+  updateQuantity: (id: number, qty: number) => void;
   total: () => number;
-};
+}
