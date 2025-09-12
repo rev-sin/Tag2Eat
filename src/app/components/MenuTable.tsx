@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/a11y/useButtonType: ignore this */
+/** biome-ignore-all lint/suspicious/noExplicitAny: ignore this */
 "use client";
 
 import { SignInButton, useUser } from "@clerk/nextjs"; // ✅ Clerk
@@ -101,7 +102,6 @@ export default function MenuTable() {
           </button>
         ) : (
           <SignInButton mode="modal">
-            {/** biome-ignore lint/a11y/useButtonType: ignore this */}
             <button className="bg-gray-400 text-white px-3 py-1 rounded cursor-pointer">
               Login to Add
             </button>
