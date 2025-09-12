@@ -1,8 +1,10 @@
 /** biome-ignore-all lint/a11y/useButtonType: ignore this */
+/** biome-ignore-all lint/style/noNonNullAssertion: ignore this */
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore this */
+
 "use client";
 
-import { SignInButton, useUser } from "@clerk/nextjs"; // ✅ Clerk
+import { SignInButton, useUser } from "@clerk/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import {
   createColumnHelper,
@@ -12,24 +14,12 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 import { useCartStore } from "@/lib/useCartStore";
+import type { MenuItem } from "@/types/menu";
 
-// ✅ Init Supabase client
 const supabase = createClient(
-  // biome-ignore lint/style/noNonNullAssertion: ignore this
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  // biome-ignore lint/style/noNonNullAssertion: ignore this
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
-
-// Define menu type
-type MenuItem = {
-  id: number;
-  name: string;
-  description: string | null;
-  price: number;
-  available: boolean;
-  created_at: string;
-};
 
 const columnHelper = createColumnHelper<MenuItem>();
 
@@ -37,10 +27,9 @@ export default function MenuTable() {
   const [data, setData] = React.useState<MenuItem[]>([]);
   const [loading, setLoading] = React.useState(true);
 
-  const { isSignedIn } = useUser(); // ✅ check if logged in
+  const { isSignedIn } = useUser();
   const { addItem } = useCartStore();
 
-  // ✅ Fetch menu items from Supabase
   React.useEffect(() => {
     const fetchMenu = async () => {
       const { data, error } = await supabase.from("menu").select("*");
@@ -55,7 +44,6 @@ export default function MenuTable() {
     fetchMenu();
   }, []);
 
-  // ✅ Define table columns
   const columns = [
     columnHelper.accessor("id", {
       header: "ID",
@@ -82,7 +70,6 @@ export default function MenuTable() {
           <span className="text-red-600 font-semibold">No</span>
         ),
     }),
-    // ✅ Custom column for Add to Cart button
     {
       id: "actions",
       header: "Actions",
