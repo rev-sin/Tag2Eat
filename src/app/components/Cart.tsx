@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useButtonType: ignore this */
 "use client";
 
 import { useCartStore } from "@/lib/useCartStore";

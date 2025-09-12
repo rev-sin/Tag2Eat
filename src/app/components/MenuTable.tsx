@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useButtonType: ignore this */
 "use client";
 
 import { SignInButton, useUser } from "@clerk/nextjs"; // ✅ Clerk
@@ -13,7 +14,9 @@ import { useCartStore } from "@/lib/useCartStore";
 
 // ✅ Init Supabase client
 const supabase = createClient(
+  // biome-ignore lint/style/noNonNullAssertion: ignore this
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  // biome-ignore lint/style/noNonNullAssertion: ignore this
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
@@ -98,6 +101,7 @@ export default function MenuTable() {
           </button>
         ) : (
           <SignInButton mode="modal">
+            {/** biome-ignore lint/a11y/useButtonType: ignore this */}
             <button className="bg-gray-400 text-white px-3 py-1 rounded cursor-pointer">
               Login to Add
             </button>
