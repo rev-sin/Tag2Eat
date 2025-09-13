@@ -2,6 +2,7 @@
 "use client";
 
 import { useCartStore } from "@/lib/useCartStore";
+import CheckoutButton from "./CheckoutButton";
 
 export default function CartTable() {
   const { items, increaseQty, decreaseQty, removeItem, clearCart } =
@@ -22,6 +23,7 @@ export default function CartTable() {
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Your Cart</h2>
 
+      {/* Responsive wrapper */}
       <div className="overflow-x-auto">
         <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
@@ -91,12 +93,7 @@ export default function CartTable() {
           >
             Clear Cart
           </button>
-          <button
-            className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
-            onClick={() => alert("Checkout flow coming soon!")}
-          >
-            Checkout
-          </button>
+          <CheckoutButton />
         </div>
       </div>
     </div>
