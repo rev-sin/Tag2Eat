@@ -1,14 +1,10 @@
-/** biome-ignore-all lint/style/noNonNullAssertion: ignore this */
+/** biome-ignore-all assist/source/organizeImports: ignore this */
 /** biome-ignore-all lint/a11y/noLabelWithoutControl: ignore this */
 "use client";
 
+import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
-import { createClient } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from "../../lib/supabaseClient";
 
 export default function Onboard() {
   const { user } = useUser();
@@ -18,21 +14,19 @@ export default function Onboard() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
 
-  // Prefill email from Clerk, fetch name & phone from Supabase
   useEffect(() => {
     if (!user) return;
-
-    setEmail(user.emailAddresses?.[0]?.emailAddress || "");
 
     const fetchUser = async () => {
       const { data, error } = await supabase
         .from("users")
-        .select("full_name, phone, rf_id")
+        .select("full_name, email, phone, rf_id")
         .eq("clerk_id", user.id)
         .single();
 
       if (!error && data) {
         setFullName(data.full_name || "");
+        setEmail(data.email || "");
         setPhone(data.phone || "");
         setRfId(data.rf_id || "");
       }
@@ -49,26 +43,27 @@ export default function Onboard() {
       return;
     }
 
-    const { error } = await supabase.from("users").upsert(
-      {
-        clerk_id: user.id,
-        rf_id,
-        full_name: fullName,
-        email,
-        phone: phone.startsWith("+91") ? phone : `+91${phone}`,
-      },
-      { onConflict: "clerk_id" },
-    );
+    const { error } = await supabase
+      .from("users")
+      .upsert(
+        {
+          clerk_id: user.id,
+          rf_id,
+          full_name: fullName,
+          email,
+          phone: phone.startsWith("+91") ? phone : `+91${phone}`,
+        },
+        { onConflict: "clerk_id" }
+      );
 
     if (error) {
-      setMessage(`Error: ${error.message}`);
+      setMessage("Error: " + error.message);
     } else {
       setMessage("User onboarded successfully!");
     }
   };
 
-  if (!user)
-    return <p className="text-center mt-10">Please sign in to onboard.</p>;
+  if (!user) return <p className="text-center mt-10">Please sign in to onboard.</p>;
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
