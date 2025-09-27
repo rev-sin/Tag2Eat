@@ -3,14 +3,52 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore this */
 
 "use client";
+import { useUser } from "@clerk/nextjs";
+import { createClient } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
 import { useCartStore } from "@/lib/useCartStore";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function CheckoutButton() {
   const { total } = useCartStore();
+  const { user } = useUser();
+  const [userDetails, setUserDetails] = useState<{
+    full_name: string;
+    email: string;
+    phone: string;
+  } | null>(null);
+
+  // Fetch user details from Supabase
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUser = async () => {
+      const { data, error } = await supabase
+        .from("users")
+        .select("full_name, email, phone")
+        .eq("clerk_id", user.id)
+        .single();
+
+      if (!error && data) {
+        setUserDetails(data);
+      }
+    };
+
+    fetchUser();
+  }, [user]);
 
   const handleCheckout = async () => {
+    if (!user || !userDetails) {
+      alert("Please sign in and make sure your profile is complete.");
+      return;
+    }
+
     const res = await fetch("/api/razorpay/order", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: total(), currency: "INR" }),
     });
 
@@ -20,16 +58,18 @@ export default function CheckoutButton() {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
       amount: order.amount,
       currency: order.currency,
-      name: "Your App Name",
+      name: "Tag2Eat",
       description: "Order Payment",
       order_id: order.id,
       handler: (response: any) => {
         alert("Payment Successful! ID: " + response.razorpay_payment_id);
       },
       prefill: {
-        name: "Test User",
-        email: "test@example.com",
-        contact: "9999999999",
+        name: userDetails.full_name,
+        email: userDetails.email,
+        contact: userDetails.phone.startsWith("+91")
+          ? userDetails.phone
+          : `+91${userDetails.phone}`,
       },
       theme: {
         color: "#3399cc",
