@@ -43,18 +43,16 @@ export default function Onboard() {
       return;
     }
 
-    const { error } = await supabase
-      .from("users")
-      .upsert(
-        {
-          clerk_id: user.id,
-          rf_id,
-          full_name: fullName,
-          email,
-          phone: phone.startsWith("+91") ? phone : `+91${phone}`,
-        },
-        { onConflict: "clerk_id" }
-      );
+    const { error } = await supabase.from("users").upsert(
+      {
+        clerk_id: user.id,
+        rf_id,
+        full_name: fullName,
+        email,
+        phone: phone.startsWith("+91") ? phone : `+91${phone}`,
+      },
+      { onConflict: "clerk_id" },
+    );
 
     if (error) {
       setMessage("Error: " + error.message);
@@ -63,7 +61,8 @@ export default function Onboard() {
     }
   };
 
-  if (!user) return <p className="text-center mt-10">Please sign in to onboard.</p>;
+  if (!user)
+    return <p className="text-center mt-10">Please sign in to onboard.</p>;
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
