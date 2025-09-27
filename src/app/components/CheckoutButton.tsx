@@ -1,4 +1,5 @@
 /** biome-ignore-all lint/style/useTemplate: ignore this */
+/** biome-ignore-all lint/style/noNonNullAssertion: ignore this */
 /** biome-ignore-all lint/a11y/useButtonType: ignore this */
 /** biome-ignore-all lint/suspicious/noExplicitAny: ignore this */
 
