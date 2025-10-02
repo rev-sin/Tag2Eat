@@ -1,8 +1,28 @@
 "use client";
+
 import { useUser } from "@clerk/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
+type Menu = {
+  name: string;
+  price: number;
+};
+
+type OrderItem = {
+  id: number;
+  menu_id: number;
+  quantity: number;
+  menu: Menu;
+};
+
+type Order = {
+  id: number;
+  status: string;
+  created_at: string;
+  order_items: OrderItem[];
+};
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -10,7 +30,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function OrdersPage() {
   const { user } = useUser();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
@@ -42,7 +62,7 @@ export default function OrdersPage() {
       }
       const { data, error } = await ordersQuery;
       if (!error && data) {
-        setOrders(data);
+        setOrders(data as unknown as Order[]);
       }
       setLoading(false);
     };
@@ -60,7 +80,7 @@ export default function OrdersPage() {
   }
 
   if (orders.length === 0) {
-    return <div className="p-8 text-center">No orders found.</div>;
+  return <div className="p-8 text-center">No orders found.</div>;
   }
 
   return (
@@ -89,7 +109,7 @@ export default function OrdersPage() {
               </tr>
             </thead>
             <tbody>
-              {order.order_items?.map((item: any) => (
+              {order.order_items?.map((item) => (
                 <tr key={item.id}>
                   <td>{item.menu?.name || "Unknown"}</td>
                   <td className="text-right">{item.quantity}</td>
@@ -101,8 +121,7 @@ export default function OrdersPage() {
           <div className="text-right font-semibold">
             Total: ₹
             {order.order_items?.reduce(
-              (acc: number, item: any) =>
-                acc + (item.menu?.price || 0) * item.quantity,
+              (acc, item) => acc + (item.menu?.price || 0) * item.quantity,
               0,
             )}
           </div>

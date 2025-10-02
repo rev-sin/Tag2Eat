@@ -69,7 +69,7 @@ export default function CheckoutButton() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            userId: user?.id,
+            userId: user.id, // clerk_id
             items: useCartStore.getState().items,
             paymentId: response.razorpay_payment_id,
           }),
@@ -82,7 +82,7 @@ export default function CheckoutButton() {
               router.push(`/orders?orderId=${data.orderId}`);
             } else {
               alert(
-                "Order DB insert failed: " + (data.error || "Unknown error"),
+                `Order DB insert failed: ${data.error || "Unknown error"}`,
               );
             }
           });

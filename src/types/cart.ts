@@ -1,3 +1,4 @@
+
 export type CartItem = {
   id: number;
   name: string;
@@ -13,6 +14,6 @@ export interface CartStore {
   decreaseQty: (id: number) => void;
   updateQuantity: (id: number, qty: number) => void;
   total: () => number;
-  resetCart: () => void;
   clearCart: () => void;
+  resetCart: () => void;
 }
