@@ -80,7 +80,7 @@ export default function OrdersPage() {
   }
 
   if (orders.length === 0) {
-  return <div className="p-8 text-center">No orders found.</div>;
+    return <div className="p-8 text-center">No orders found.</div>;
   }
 
   return (

@@ -81,9 +81,7 @@ export default function CheckoutButton() {
               setUserDetails(null);
               router.push(`/orders?orderId=${data.orderId}`);
             } else {
-              alert(
-                `Order DB insert failed: ${data.error || "Unknown error"}`,
-              );
+              alert(`Order DB insert failed: ${data.error || "Unknown error"}`);
             }
           });
       },

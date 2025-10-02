@@ -64,7 +64,7 @@ export default function CartTable() {
                       }
                       className="bg-gray-300 text-black px-2 py-1 rounded hover:bg-gray-400"
                     >
-                      –
+                      -
                     </button>
 
                     <span className="px-2">{item.quantity}</span>

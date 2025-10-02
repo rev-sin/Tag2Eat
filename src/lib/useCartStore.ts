@@ -1,6 +1,5 @@
-
 import { create } from "zustand";
-import type { CartStore, CartItem } from "@/types/cart";
+import type { CartItem, CartStore } from "@/types/cart";
 
 export const useCartStore = create<CartStore>((set, get) => ({
   items: [],
