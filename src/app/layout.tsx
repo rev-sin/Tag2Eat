@@ -91,6 +91,14 @@ export default async function RootLayout({
                   >
                     Review Cart
                   </Link>
+                </SignedIn>
+                <SignedIn>
+                  <Link
+                    href="/account"
+                    className="px-3 py-2 rounded-lg bg-yellow-500 text-white text-sm font-medium transition-all hover:bg-yellow-600 hover:scale-105"
+                  >
+                    Account
+                  </Link>
                   <UserButton
                     appearance={{
                       elements: {

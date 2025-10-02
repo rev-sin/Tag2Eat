@@ -21,7 +21,7 @@ export const useCartStore = create<CartStore>((set, get) => ({
     set((state) => ({
       items: state.items.filter((i) => i.id !== id),
     })),
-
+  resetCart: () => set({ items: [] }),
   clearCart: () => set({ items: [] }),
 
   increaseQty: (id) =>
