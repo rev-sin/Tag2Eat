@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -32,7 +32,9 @@ export default function OrdersPage() {
       const userId = userData.id;
       let ordersQuery = supabase
         .from("orders")
-        .select("id, status, created_at, order_items(id, menu_id, quantity, menu(name, price))")
+        .select(
+          "id, status, created_at, order_items(id, menu_id, quantity, menu(name, price))",
+        )
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (orderId) {

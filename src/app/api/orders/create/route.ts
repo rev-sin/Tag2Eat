@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -15,7 +15,10 @@ export async function POST(req: Request) {
       .eq("clerk_id", userId)
       .single();
     if (userError || !user) {
-      return NextResponse.json({ error: userError?.message || "User not found" }, { status: 400 });
+      return NextResponse.json(
+        { error: userError?.message || "User not found" },
+        { status: 400 },
+      );
     }
     // Insert order
     const { data: order, error: orderError } = await supabase
