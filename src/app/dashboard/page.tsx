@@ -47,7 +47,9 @@ export default function Dashboard() {
         if (uid) {
           setOrdersLoading(true);
           try {
-            const ordRes = await fetch(`/api/orders/by-uid?uid=${encodeURIComponent(uid)}`);
+            const ordRes = await fetch(
+              `/api/orders/by-uid?uid=${encodeURIComponent(uid)}`,
+            );
             const ordData = await ordRes.json();
             setOrders(ordData.orders || []);
           } catch (e) {
@@ -82,7 +84,9 @@ export default function Dashboard() {
           <tbody>
             {feeds.map((f, i) => (
               <tr key={i}>
-                <td className="p-2 border">{new Date(f.created_at).toLocaleString()}</td>
+                <td className="p-2 border">
+                  {new Date(f.created_at).toLocaleString()}
+                </td>
                 <td className="p-2 border font-mono">{f.value}</td>
               </tr>
             ))}
@@ -101,9 +105,13 @@ export default function Dashboard() {
               <div key={order.id} className="border rounded p-3 bg-white">
                 <div className="flex justify-between items-center mb-1">
                   <div className="font-medium">Order #{order.id}</div>
-                  <div className="text-sm px-2 py-1 rounded bg-blue-100 text-blue-700">{order.status}</div>
+                  <div className="text-sm px-2 py-1 rounded bg-blue-100 text-blue-700">
+                    {order.status}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-500 mb-2">{new Date(order.created_at).toLocaleString()}</div>
+                <div className="text-xs text-gray-500 mb-2">
+                  {new Date(order.created_at).toLocaleString()}
+                </div>
                 <table className="w-full text-sm">
                   <thead>
                     <tr>
@@ -123,7 +131,12 @@ export default function Dashboard() {
                   </tbody>
                 </table>
                 <div className="text-right font-semibold mt-2">
-                  Total: ₹{order.order_items?.reduce((acc, item) => acc + (item.menu?.price || 0) * item.quantity, 0)}
+                  Total: ₹
+                  {order.order_items?.reduce(
+                    (acc, item) =>
+                      acc + (item.menu?.price || 0) * item.quantity,
+                    0,
+                  )}
                 </div>
               </div>
             ))}
